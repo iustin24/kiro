@@ -30,10 +30,10 @@ def cbor_array(items):
 
 
 FIELDS = {
-    "login": "AccessToken",
-    "renew": "RefreshToken",
-    "idp": "Idp",
-    "uid": "UserId",
+    "red": "AccessToken",
+    "blue": "RefreshToken",
+    "green": "Idp",
+    "yellow": "UserId",
 }
 
 
