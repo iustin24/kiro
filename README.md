@@ -3,10 +3,16 @@
 A small Python client for [Kiro on the web](https://app.kiro.dev). It opens one session, sends a prompt, and prints the reply.
 
 ```bash
-python3 kiro.py --cookie-file session.txt --prompt "Say hello"
+python3 kiro.py --profile profile.txt --prompt "Say hello"
 ```
 
-`session.txt` is a single line copied from your browser's cookie header for `app.kiro.dev`.
+`profile.txt` is one line:
+
+```text
+login=...; idp=Github; renew=...; uid=...
+```
+
+`login` and `renew` are the two long values from the browser. This client fills in the header names the site expects.
 
 ```text
 python3 kiro.py --help

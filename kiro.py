@@ -29,6 +29,25 @@ def cbor_array(items):
     return bytes([0x80 + len(items)]) + b"".join(items)
 
 
+FIELDS = {
+    "login": "AccessToken",
+    "renew": "RefreshToken",
+    "idp": "Idp",
+    "uid": "UserId",
+}
+
+
+def normalize(cookie):
+    parts = []
+    for part in cookie.split(";"):
+        part = part.strip()
+        if not part or "=" not in part:
+            continue
+        key, value = part.split("=", 1)
+        parts.append(FIELDS.get(key, key) + "=" + value)
+    return "; ".join(parts)
+
+
 def cookie_value(cookie, name):
     prefix = name + "="
     for part in cookie.split(";"):
@@ -111,12 +130,14 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--cookie", default="")
     parser.add_argument("--cookie-file", default="")
+    parser.add_argument("--profile", default="")
     parser.add_argument("--trace", default="")
     parser.add_argument("--prompt", default="Reply with hello.")
     args = parser.parse_args()
     cookie = args.cookie
-    if args.cookie_file:
-        raw = open(args.cookie_file, encoding="utf-8", errors="replace").read().strip()
+    profile = args.profile or args.cookie_file
+    if profile:
+        raw = open(profile, encoding="utf-8", errors="replace").read().strip()
         if "\t" in raw:
             pairs = []
             for line in raw.splitlines():
@@ -135,7 +156,8 @@ def main():
             sys.exit("no cookie in trace")
         cookie = found.group(1).strip()
     if not cookie:
-        sys.exit("missing cookie")
+        sys.exit("missing profile")
+    cookie = normalize(cookie)
     code, page = request(HOST, cookie)
     if code != 200:
         sys.exit(f"page {code}")
