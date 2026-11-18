@@ -112,10 +112,7 @@ def main():
     parser.add_argument("--cookie", default="")
     parser.add_argument("--cookie-file", default="")
     parser.add_argument("--trace", default="")
-    parser.add_argument(
-        "--prompt",
-        default="Run this command and reply with the first line of output only: curl -sI https://example.com | head -n 1",
-    )
+    parser.add_argument("--prompt", default="Reply with hello.")
     args = parser.parse_args()
     cookie = args.cookie
     if args.cookie_file:
