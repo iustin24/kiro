@@ -110,6 +110,7 @@ def show(raw):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--cookie", default="")
+    parser.add_argument("--cookie-file", default="")
     parser.add_argument("--trace", default="")
     parser.add_argument(
         "--prompt",
@@ -117,6 +118,19 @@ def main():
     )
     args = parser.parse_args()
     cookie = args.cookie
+    if args.cookie_file:
+        raw = open(args.cookie_file, encoding="utf-8", errors="replace").read().strip()
+        if "\t" in raw:
+            pairs = []
+            for line in raw.splitlines():
+                if not line or line.startswith("#"):
+                    continue
+                parts = line.split("\t")
+                if len(parts) >= 7:
+                    pairs.append(parts[5] + "=" + parts[6])
+            cookie = "; ".join(pairs)
+        else:
+            cookie = raw
     if args.trace:
         trace = open(args.trace, encoding="utf-8", errors="replace").read()
         found = re.search(r"(?m)^> Cookie: (.+)$", trace)
