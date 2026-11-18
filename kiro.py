@@ -29,25 +29,6 @@ def cbor_array(items):
     return bytes([0x80 + len(items)]) + b"".join(items)
 
 
-FIELDS = {
-    "red": "AccessToken",
-    "blue": "RefreshToken",
-    "green": "Idp",
-    "yellow": "UserId",
-}
-
-
-def normalize(cookie):
-    parts = []
-    for part in cookie.split(";"):
-        part = part.strip()
-        if not part or "=" not in part:
-            continue
-        key, value = part.split("=", 1)
-        parts.append(FIELDS.get(key, key) + "=" + value)
-    return "; ".join(parts)
-
-
 def cookie_value(cookie, name):
     prefix = name + "="
     for part in cookie.split(";"):
@@ -157,7 +138,6 @@ def main():
         cookie = found.group(1).strip()
     if not cookie:
         sys.exit("missing profile")
-    cookie = normalize(cookie)
     code, page = request(HOST, cookie)
     if code != 200:
         sys.exit(f"page {code}")

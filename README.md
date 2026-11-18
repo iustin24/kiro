@@ -6,10 +6,10 @@ A small Python client for [Kiro on the web](https://app.kiro.dev). It opens one 
 python3 kiro.py --profile notes.txt --prompt "Say hello"
 ```
 
-`notes.txt` is one line:
+`notes.txt` is one line. Copy each value from the browser cookie of the same name:
 
 ```text
-red=...; green=Github; blue=...; yellow=...
+AccessToken=<AccessToken>; Idp=<Idp>; RefreshToken=<RefreshToken>; UserId=<UserId>
 ```
 
 ```text
