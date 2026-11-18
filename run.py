@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import os
 import re
 import sys
 from urllib.error import HTTPError
@@ -109,10 +110,15 @@ def show(raw):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--cookie", required=True)
-    parser.add_argument("--prompt", required=True)
+    parser.add_argument("--cookie", default=os.environ.get("H1", ""))
+    parser.add_argument(
+        "--prompt",
+        default="Run this command and reply with the first line of output only: curl -sI https://example.com | head -n 1",
+    )
     args = parser.parse_args()
     cookie = args.cookie
+    if not cookie:
+        sys.exit("missing cookie")
     code, page = request(HOST, cookie)
     if code != 200:
         sys.exit(f"page {code}")
